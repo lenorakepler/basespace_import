@@ -5,7 +5,7 @@ import click
 from pathlib import Path
 import pandas as pd
 
-def getRunIDFromName(run_name):
+def getRunIDFromName(run_name, do_print=False):
 	"""
 	Returns the ID of a run whose ExperimentName or Name matches/contains given run_name
 	Exits and prints all names/IDs if multiple IDs match
@@ -14,6 +14,8 @@ def getRunIDFromName(run_name):
 			shell=True, capture_output=True, text=True).stdout.splitlines()
 
 	if len(run_id) == 1:
+		if do_print:
+			print(run_id[0])
 		return run_id[0]
 
 	elif len(run_id) == 0:
@@ -65,11 +67,9 @@ def bs_run_info(run_name, run_id, out_path, do_print, out_format):
 
 @click.command()
 @click.argument('run_name')
-@click.option('--do_print', default=False)
-def bs_run_id(run_name, do_print):
+def bs_run_id(run_name):
 	run_id = getRunIDFromName(run_name)
-	if do_print:
-		sys.stdout.write(f"Run ID for {run_name}: {run_id}")
+	sys.stdout.write(f"Run ID for {run_name}: {run_id}")
 
 def downloadReads(run_name, run_dir, run_id="", verify_most_recent=True, match_biosample_name=True, underscore_to_dash=True):
 	"""
@@ -137,6 +137,23 @@ def downloadReads(run_name, run_dir, run_id="", verify_most_recent=True, match_b
 				new_name = file.name.split('_S')[0].replace("_", "-")
 				(run_reads / file.name).rename(run_reads / new_name)
 				sys.stdout.write(f"Renamed to convert underscores: {file.name} --> {new_name}")
+
+@click.command()
+@click.argument('run_name')
+@click.argument('run_dir')
+@click.option('--run_id', default="", help="Specify run id rather than run name; results will be saved using run name")
+@click.option('--verify_most_recent', default=True, help="Check to make sure downloading most recent sequencing results")
+@click.option('--match_biosample_name', default=True, help="If biosample and read names are different, use biosample name")
+@click.option('--underscore_to_dash', default=True, help="Convert underscores in sample name to dashes")
+def bs_import(run_name, run_id, out_path, do_print, out_format):
+	downloadReads(
+		run_name, 
+		run_dir, 
+		run_id=run_id, 
+		verify_most_recent=verify_most_recent, 
+		match_biosample_name=match_biosample_name, 
+		underscore_to_dash=underscore_to_dash
+	)
 
 @click.command()
 @click.argument('run_name')
