@@ -1,5 +1,6 @@
 # basespace_import
-Helper commands to import reads using basespace's CLI given the name of the sequencing run
+Helper commands to import reads using basespace's CLI given the name of the sequencing run.
+
 This is pretty specific to our use case, but should be easily adaptable.
 
 
@@ -10,7 +11,8 @@ This is pretty specific to our use case, but should be easily adaptable.
 
 ## downloadReads
 
-Download all reads associated with a given run name or ID
+Download all reads associated with a given run name or ID. 
+
 Unless a run_id is specified (see getRunIDFromName), automatically tries to match the run name to an existing sequencing run
 
 ### Python
@@ -40,7 +42,8 @@ bs_import run_name run_dir
 
 ## getRunInfo
 
-Gets all BaseSpace info about a given run and saves this info to a path and/or prints to console
+Gets all BaseSpace info about a given run and saves this info to a path and/or prints to console.
+
 Unless a run_id is specified (see getRunIDFromName), automatically tries to match the run name to an existing sequencing run
 
 ### Python
@@ -70,6 +73,7 @@ bs_run_info run_name
 ## getRunIDFromName
 
 Returns the ID of a run whose ExperimentName or Name matches/contains given run_name
+
 Exits and prints all names/IDs if multiple IDs match
 
 ### Python
